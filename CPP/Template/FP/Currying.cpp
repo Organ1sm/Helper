@@ -23,6 +23,7 @@ class Curried
   public:
     constexpr Curried(Function func, CaputuredArgs &&...args)
         : Func {func}, Caputured {caputureByCopy(std::move(args)...)}
+
     {}
 
     constexpr Curried(Function func, std::tuple<CaputuredArgs...> &&args)
@@ -38,8 +39,8 @@ class Curried
         if constexpr (std::is_invocable_v<Function, CaputuredArgs..., NewArgs...>)
             return std::apply(Func, std::move(allArgs));
         else
-            return Curried<Function, CaputuredArgs..., std::decay_t<NewArgs>...>(
-                Func, std::move(allArgs));
+            return Curried<Function, CaputuredArgs..., std::decay_t<NewArgs>...>(Func,
+                                                                                 std::move(allArgs));
     }
 };
 
